@@ -1,24 +1,26 @@
-# README
+# KATA TRACKER
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This project is an attempt at a heroku one-click-install practise aid.
 
-Things you may want to cover:
+The goal is to have a tool with the following features:
+- stores katas and information about their sources
+- sends reminders to establish a routine of practicing these katas and learning new ones
 
+## planned features
+- [ ] secure user authentication
+- [ ] add katas and links to where you found them 
+- [ ] track kata completion, and the languages they've been completed in
+- [ ] e-mail reminders to reinforce a daily kata routine
+- [ ] one click heroku install
+- [ ] oauth login via github account
+
+## TODO for this readme
+flesh out readme with info such as
 * Ruby version
-
 * System dependencies
-
 * Configuration
-
 * Database creation
-
 * Database initialization
-
 * How to run the test suite
-
 * Services (job queues, cache servers, search engines, etc.)
-
 * Deployment instructions
-
-* ...
