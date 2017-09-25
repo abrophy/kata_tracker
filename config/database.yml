@@ -26,8 +26,6 @@ test:
   database: kata_tracker_test
   username: postgres
   password: postgres
-  host: 192.168.99.100
-  port: 32769
 
 production:
   <<: *default
