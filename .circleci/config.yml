@@ -1,49 +1,47 @@
 version: 2
 jobs:
   build:
-    parallelism: 3
-    working_directory: ~/circleci-demo-ruby-rails
+    working_directory: ~/kata_tracker
     docker:
-      - image: circleci/ruby:2.4.1-node
+      - image: circleci/ruby:2.3-node
         environment:
-          PG_HOST: localhost
+          PGHOST: 127.0.0.1
+          PGUSER: postgres
           RAILS_ENV: test
-      - image: circleci/postgres:9.4.12-alpine
+      - image: circleci/postgres:9.5-alpine
         environment:
           POSTGRES_USER: postgres
-          POSTGRES_DB: kata_tracker_test
+          POSTGRES_DB: kata_tracker
           POSTGRES_PASSWORD: "postgres"
     steps:
       - checkout
 
-      # Restore bundle cache
-      - restore_cache:
-          key: rails-demo-{{ checksum "Gemfile.lock" }}
+      - type: cache-restore
+        name: Restore bundle cache
+        key: myapp-bundle-{{ checksum "Gemfile.lock" }}
 
-      # Bundle install dependencies
-      - run: bundle install --path vendor/bundle
+      - run:
+          name: Bundle Install
+          command: bin/bundle install --path vendor/bundle
 
-      # Store bundle cache
-      - save_cache:
-          key: rails-demo-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
+      - type: cache-save
+        name: Store bundle cache
+        key: myapp-bundle-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
 
-      # Database setup
-      - run: bundle exec rake db:create
-      - run: bundle exec rake db:schema:load
+      - run:
+          name: Rubocop
+          command: bin/rubocop --rails
 
-      # Run rspec in parallel
-      - type: shell
-        command: |
-          bundle exec rspec --profile 10 \
-                            --format RspecJunitFormatter \
-                            --out test_results/rspec.xml \
-                            --format progress \
-                            $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
-        environment:
-          DATABASE_URL: "postgres://ubuntu@localhost:5432/kata_tracker"
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
 
-      # Save test results for timing analysis
-      - store_test_results:
-          path: test_results
+      - run:
+          name: Database setup
+          command: bin/rails db:schema:load --trace
+
+      - run:
+          name: Run tests
+          command: bin/rails test
