@@ -41,6 +41,8 @@ jobs:
                             --out test_results/rspec.xml \
                             --format progress \
                             $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+        environment:
+          DATABASE_URL: "postgres://ubuntu@localhost:5432/kata_tracker"
 
       # Save test results for timing analysis
       - store_test_results:
