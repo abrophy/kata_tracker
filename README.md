@@ -5,6 +5,8 @@ This project is an attempt at a heroku one-click-install practise aid.
 The goal is to have a tool with the following features:
 - stores katas and information about their sources
 - sends reminders to establish a routine of practicing these katas and learning new ones
+- needs to be a personal, and easily personalized, hub for routine
+  exercises
 
 ## planned features
 - [ ] secure user authentication
